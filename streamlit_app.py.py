@@ -1,6 +1,6 @@
 import streamlit as st
 
-# --- Title and Description ---
+# --- Title ---
 st.set_page_config(page_title="AI Movie Recommender", page_icon="🎬")
 st.title("🎬 AI Movie Recommendation Assistant")
 st.write("Answer a few questions and I'll recommend some movies for you!")
@@ -23,7 +23,7 @@ movies = [
      "poster": "https://m.media-amazon.com/images/I/81pE9L2W3WL._AC_SY679_.jpg"},
 ]
 
-# --- Options for dropdowns ---
+# --- Options ---
 genres = sorted(list(set([m["genre"] for m in movies])))
 actors = sorted(list(set([m["actor"] for m in movies])))
 moods = sorted(list(set([m["mood"] for m in movies])))
@@ -54,14 +54,14 @@ def recommend_movies(genre, actor, mood):
     recommendations.sort(reverse=True, key=lambda x: x[0])
     return [movie for score, movie in recommendations][:5]
 
-# --- Display Recommendations with Posters in Columns ---
+# --- Display Recommendations in Columns ---
 if st.button("Get Recommendations"):
     recs = recommend_movies(genre_choice, actor_choice, mood_choice)
     if recs:
         st.success("✅ Based on your choices, we recommend:")
-        cols = st.columns(len(recs))  # one column per movie
+        cols = st.columns(len(recs))
         for col, movie in zip(cols, recs):
             col.write(f"**{movie['title']}**")
-            col.image(movie['poster'], use_column_width=True)
+            col.image(movie['poster'], use_container_width=True)  # updated parameter
     else:
         st.warning("😕 Sorry, no matches found. Try different choices!")
