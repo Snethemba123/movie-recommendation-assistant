@@ -31,7 +31,7 @@ movies = [
 # -------------------------
 st.set_page_config(page_title="AI Movie Recommender", page_icon="🎬")
 st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>🎬 AI Movie Recommendation Chatbot</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #4b7bec;'>“😌 Looks like you’re in the mood to unwind and escape for a bit… Let’s find some movies that will make you smile, relax, and just enjoy the moment!”</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #4b7bec;'>😌 Looks like you’re in the mood to unwind and escape for a bit… Let’s find some movies that will make you smile, relax, and just enjoy the moment!</p>", unsafe_allow_html=True)
 
 # -------------------------
 # Initialize session state
