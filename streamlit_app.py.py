@@ -78,22 +78,18 @@ elif st.session_state.step == 3:
         if st.session_state.mood.strip():
             next_step()
 
-elif st.session_state.step == 4:
-    st.markdown("<h2 style='color:#2ed573;'>🎯 Based on your answers, we recommend:</h2>", unsafe_allow_html=True)
-    recommendations = []
-    for movie in movies:
-        if (
-            st.session_state.genre.lower() in movie["genre"].lower() or
-            st.session_state.actor.lower() in movie["actor"].lower() or
-            st.session_state.mood.lower() in movie["mood"].lower()
-        ):
-            recommendations.append(movie)
+if recommendations:
+    st.success("✅ Based on your answers, we recommend:")
+    
+    # Display posters in columns, 2–3 per row
+    num_cols = min(3, len(recommendations))  # show up to 3 per row
+    cols = st.columns(num_cols)
+    
+    for col, movie in zip(cols, recommendations[:3]):
+        col.markdown(f"**{movie['title']}**", unsafe_allow_html=True)
+        # Display bigger image
+        col.image(movie["poster"], use_container_width=True)
 
-    if recommendations:
-        cols = st.columns(len(recommendations[:3]))
-        for col, movie in zip(cols, recommendations[:3]):
-            col.markdown(f"**{movie['title']}**")
-            col.image(movie["poster"], use_container_width=True)
     else:
         st.warning("😕 Sorry, no matches found. Try different answers!")
 
