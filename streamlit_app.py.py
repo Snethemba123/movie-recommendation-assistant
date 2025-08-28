@@ -31,34 +31,71 @@ movies = [
 # -------------------------
 st.set_page_config(page_title="AI Movie Recommender", page_icon="🎬")
 st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>🎬 AI Movie Recommendation Chatbot</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #4b7bec;'>Answer a few questions and I'll recommend 2–3 movies for you!</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #4b7bec;'>I will ask you a few questions and then recommend 2–3 movies!</p>", unsafe_allow_html=True)
 
 # -------------------------
-# User inputs
+# Initialize session state
 # -------------------------
-genre = st.text_input("1️⃣ What genre do you prefer? (e.g., action, romance, drama, sci-fi, animation)")
-actor = st.text_input("2️⃣ Who is one of your favourite actors? (e.g., Leonardo DiCaprio, Emma Stone)")
-mood = st.text_input("3️⃣ What mood are you in? (e.g., happy, adventurous, relaxed, dark, intense, thoughtful)")
+if "step" not in st.session_state:
+    st.session_state.step = 1
+if "mood" not in st.session_state:
+    st.session_state.mood = ""
+if "genre" not in st.session_state:
+    st.session_state.genre = ""
+if "actor" not in st.session_state:
+    st.session_state.actor = ""
+
+def next_step():
+    st.session_state.step += 1
+
+def restart_chat():
+    st.session_state.step = 1
+    st.session_state.mood = ""
+    st.session_state.genre = ""
+    st.session_state.actor = ""
 
 # -------------------------
-# Recommendation logic
+# Step-by-step conversation
 # -------------------------
-if st.button("🎯 Get Recommendations"):
+if st.session_state.step == 1:
+    st.markdown("<h3 style='color:#ff793f;'>1️⃣ How are you feeling today? (mood)</h3>", unsafe_allow_html=True)
+    st.session_state.mood = st.text_input("", placeholder="e.g., happy, adventurous, relaxed, dark")
+    if st.button("➡️ Enter Mood"):
+        if st.session_state.mood.strip():
+            next_step()
+
+elif st.session_state.step == 2:
+    st.markdown("<h3 style='color:#ff793f;'>2️⃣ What genre do you prefer?</h3>", unsafe_allow_html=True)
+    st.session_state.genre = st.text_input("", placeholder="e.g., action, romance, drama, sci-fi, animation")
+    if st.button("➡️ Enter Genre"):
+        if st.session_state.genre.strip():
+            next_step()
+
+elif st.session_state.step == 3:
+    st.markdown("<h3 style='color:#ff793f;'>3️⃣ Who is one of your favourite actors?</h3>", unsafe_allow_html=True)
+    st.session_state.actor = st.text_input("", placeholder="e.g., Leonardo DiCaprio, Emma Stone")
+    if st.button("➡️ Enter Actor"):
+        if st.session_state.actor.strip():
+            next_step()
+
+elif st.session_state.step == 4:
+    st.markdown("<h2 style='color:#2ed573;'>🎯 Based on your answers, we recommend:</h2>", unsafe_allow_html=True)
     recommendations = []
-
     for movie in movies:
         if (
-            (genre.strip().lower() in movie["genre"].lower() if genre else False) or
-            (actor.strip().lower() in movie["actor"].lower() if actor else False) or
-            (mood.strip().lower() in movie["mood"].lower() if mood else False)
+            st.session_state.mood.lower() in movie["mood"].lower() or
+            st.session_state.genre.lower() in movie["genre"].lower() or
+            st.session_state.actor.lower() in movie["actor"].lower()
         ):
             recommendations.append(movie)
 
     if recommendations:
-        st.success("✅ Based on your answers, we recommend:")
         cols = st.columns(len(recommendations[:3]))
         for col, movie in zip(cols, recommendations[:3]):
             col.markdown(f"**{movie['title']}**")
-            col.image(movie['poster'], use_container_width=True)
+            col.image(movie["poster"], use_container_width=True)
     else:
         st.warning("😕 Sorry, no matches found. Try different answers!")
+
+    if st.button("🔄 Restart Chat"):
+        restart_chat()
