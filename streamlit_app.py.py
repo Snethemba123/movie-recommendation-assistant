@@ -19,8 +19,9 @@ movies = [
 # -------------------------
 # Streamlit chatbot setup
 # -------------------------
-st.title("🎬 AI Movie Recommendation Chatbot")
-st.write("Hi! I will recommend 2–3 movies based on your preferences. Let's chat!")
+st.set_page_config(page_title="AI Movie Recommender", page_icon="🎬")
+st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>🎬 AI Movie Recommendation Chatbot</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #4b7bec;'>Hi! I will recommend 2–3 movies based on your preferences. Let's chat!</p>", unsafe_allow_html=True)
 
 # Initialize session state
 if "step" not in st.session_state:
@@ -38,26 +39,33 @@ if "mood" not in st.session_state:
 def next_step():
     st.session_state.step += 1
 
+# Step 1: Genre
 if st.session_state.step == 1:
-    st.session_state.genre = st.text_input("1️⃣ What genre do you prefer? (e.g., action, romance, drama, sci-fi, animation)")
-    if st.session_state.genre:
-        next_step()
+    st.markdown("<h3 style='color:#ff793f;'>1️⃣ What genre do you prefer?</h3>", unsafe_allow_html=True)
+    st.session_state.genre = st.text_input("", placeholder="e.g., action, romance, drama, sci-fi, animation")
+    if st.button("➡️ Enter Genre"):
+        if st.session_state.genre.strip() != "":
+            next_step()
 
+# Step 2: Actor
 elif st.session_state.step == 2:
-    st.session_state.actor = st.text_input("2️⃣ Who is one of your favourite actors? (e.g., Leonardo DiCaprio, Emma Stone)")
-    if st.session_state.actor:
-        next_step()
+    st.markdown("<h3 style='color:#ff793f;'>2️⃣ Who is one of your favourite actors?</h3>", unsafe_allow_html=True)
+    st.session_state.actor = st.text_input("", placeholder="e.g., Leonardo DiCaprio, Emma Stone")
+    if st.button("➡️ Enter Actor"):
+        if st.session_state.actor.strip() != "":
+            next_step()
 
+# Step 3: Mood
 elif st.session_state.step == 3:
-    st.session_state.mood = st.text_input("3️⃣ What mood are you in? (e.g., happy, adventurous, relaxed, dark, intense, thoughtful)")
-    if st.session_state.mood:
-        next_step()
+    st.markdown("<h3 style='color:#ff793f;'>3️⃣ What mood are you in?</h3>", unsafe_allow_html=True)
+    st.session_state.mood = st.text_input("", placeholder="e.g., happy, adventurous, relaxed, dark, intense, thoughtful")
+    if st.button("➡️ Enter Mood"):
+        if st.session_state.mood.strip() != "":
+            next_step()
 
-# -------------------------
-# Show recommendations
-# -------------------------
+# Step 4: Recommendations
 elif st.session_state.step == 4:
-    st.write("🎯 Based on your answers, here are some movie recommendations:")
+    st.markdown("<h2 style='color:#2ed573;'>🎯 Based on your answers, here are some movie recommendations:</h2>", unsafe_allow_html=True)
     recommendations = []
 
     for movie in movies:
@@ -70,11 +78,11 @@ elif st.session_state.step == 4:
 
     if recommendations:
         for rec in recommendations[:3]:
-            st.write(f" - {rec}")
+            st.markdown(f"<p style='color:#ffa502; font-size:18px;'>🎬 {rec}</p>", unsafe_allow_html=True)
     else:
-        st.write("😕 Sorry, I couldn’t find a perfect match. Try different answers!")
+        st.markdown("<p style='color:#ff6b81;'>😕 Sorry, I couldn’t find a perfect match. Try different answers!</p>", unsafe_allow_html=True)
 
-    # Option to restart
+    # Restart option
     if st.button("🔄 Restart Chat"):
         st.session_state.step = 1
         st.session_state.genre = ""
