@@ -31,7 +31,7 @@ movies = [
 # -------------------------
 st.set_page_config(page_title="AI Movie Recommender", page_icon="🎬")
 st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>🎬 AI Movie Recommendation Chatbot</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #4b7bec;'>“😌 Looks like you’re in the mood to unwind and escape for a bit… Let’s find some movies that will make you smile, relax, and just enjoy the moment!”</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #4b7bec;'>I will ask you a few questions and then recommend 2–3 movies!</p>", unsafe_allow_html=True)
 
 # -------------------------
 # Initialize session state
@@ -78,18 +78,22 @@ elif st.session_state.step == 3:
         if st.session_state.mood.strip():
             next_step()
 
-if recommendations:
-    st.success("✅ Based on your answers, we recommend:")
-    
-    # Display posters in columns, 2–3 per row
-    num_cols = min(3, len(recommendations))  # show up to 3 per row
-    cols = st.columns(num_cols)
-    
-    for col, movie in zip(cols, recommendations[:3]):
-        col.markdown(f"**{movie['title']}**", unsafe_allow_html=True)
-        # Display bigger image
-        col.image(movie["poster"], use_container_width=True)
+elif st.session_state.step == 4:
+    st.markdown("<h2 style='color:#2ed573;'>🎯 Based on your answers, we recommend:</h2>", unsafe_allow_html=True)
+    recommendations = []
+    for movie in movies:
+        if (
+            st.session_state.genre.lower() in movie["genre"].lower() or
+            st.session_state.actor.lower() in movie["actor"].lower() or
+            st.session_state.mood.lower() in movie["mood"].lower()
+        ):
+            recommendations.append(movie)
 
+    if recommendations:
+        cols = st.columns(len(recommendations[:3]))
+        for col, movie in zip(cols, recommendations[:3]):
+            col.markdown(f"**{movie['title']}**")
+            col.image(movie["poster"], use_container_width=True)
     else:
         st.warning("😕 Sorry, no matches found. Try different answers!")
 
