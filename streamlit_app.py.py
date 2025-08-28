@@ -38,44 +38,44 @@ st.markdown("<p style='text-align: center; color: #4b7bec;'>I will ask you a few
 # -------------------------
 if "step" not in st.session_state:
     st.session_state.step = 1
-if "mood" not in st.session_state:
-    st.session_state.mood = ""
 if "genre" not in st.session_state:
     st.session_state.genre = ""
 if "actor" not in st.session_state:
     st.session_state.actor = ""
+if "mood" not in st.session_state:
+    st.session_state.mood = ""
 
 def next_step():
     st.session_state.step += 1
 
 def restart_chat():
     st.session_state.step = 1
-    st.session_state.mood = ""
     st.session_state.genre = ""
     st.session_state.actor = ""
+    st.session_state.mood = ""
 
 # -------------------------
 # Step-by-step conversation
 # -------------------------
 if st.session_state.step == 1:
-    st.markdown("<h3 style='color:#ff793f;'>1️⃣ How are you feeling today? (mood)</h3>", unsafe_allow_html=True)
-    st.session_state.mood = st.text_input("", placeholder="e.g., happy, adventurous, relaxed, dark")
-    if st.button("➡️ Enter Mood"):
-        if st.session_state.mood.strip():
-            next_step()
-
-elif st.session_state.step == 2:
-    st.markdown("<h3 style='color:#ff793f;'>2️⃣ What genre do you prefer?</h3>", unsafe_allow_html=True)
-    st.session_state.genre = st.text_input("", placeholder="e.g., action, romance, drama, sci-fi, animation")
+    st.markdown("<h3 style='color:#ff793f;'>1️⃣ What genre do you prefer?</h3>", unsafe_allow_html=True)
+    st.session_state.genre = st.text_area("", placeholder="e.g., action, romance, drama, sci-fi, animation", height=50)
     if st.button("➡️ Enter Genre"):
         if st.session_state.genre.strip():
             next_step()
 
-elif st.session_state.step == 3:
-    st.markdown("<h3 style='color:#ff793f;'>3️⃣ Who is one of your favourite actors?</h3>", unsafe_allow_html=True)
-    st.session_state.actor = st.text_input("", placeholder="e.g., Leonardo DiCaprio, Emma Stone")
+elif st.session_state.step == 2:
+    st.markdown("<h3 style='color:#ff793f;'>2️⃣ Who is one of your favourite actors?</h3>", unsafe_allow_html=True)
+    st.session_state.actor = st.text_area("", placeholder="e.g., Leonardo DiCaprio, Emma Stone", height=50)
     if st.button("➡️ Enter Actor"):
         if st.session_state.actor.strip():
+            next_step()
+
+elif st.session_state.step == 3:
+    st.markdown("<h3 style='color:#ff793f;'>3️⃣ What mood are you in?</h3>", unsafe_allow_html=True)
+    st.session_state.mood = st.text_area("", placeholder="e.g., happy, adventurous, relaxed, dark, intense, thoughtful", height=50)
+    if st.button("➡️ Get Recommendations"):
+        if st.session_state.mood.strip():
             next_step()
 
 elif st.session_state.step == 4:
@@ -83,9 +83,9 @@ elif st.session_state.step == 4:
     recommendations = []
     for movie in movies:
         if (
-            st.session_state.mood.lower() in movie["mood"].lower() or
             st.session_state.genre.lower() in movie["genre"].lower() or
-            st.session_state.actor.lower() in movie["actor"].lower()
+            st.session_state.actor.lower() in movie["actor"].lower() or
+            st.session_state.mood.lower() in movie["mood"].lower()
         ):
             recommendations.append(movie)
 
