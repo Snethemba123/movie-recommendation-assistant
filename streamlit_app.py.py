@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
-Original file is located at
-    https://colab.research.google.com/drive/1t-qv-kcO4ZeQVMr3WEuQ_yzeUZVfHvoM
-"""
-
 import streamlit as st
 
 st.title("🎬 AI Movie Recommendation Assistant")
@@ -24,8 +17,8 @@ mood = st.text_input("Your mood?").lower()
 
 # Recommendation logic
 if st.button("Get Recommendations"):
-    recs = [m["title"] for m in movies if genre in m["genre"].lower()
-                                    or actor in m["actor"].lower()
+    recs = [m["title"] for m in movies if genre in m["genre"].lower() 
+                                    or actor in m["actor"].lower() 
                                     or mood in m["mood"].lower()]
     if recs:
         st.write("We recommend:")
@@ -33,4 +26,3 @@ if st.button("Get Recommendations"):
             st.write(f" - {r}")
     else:
         st.write("No matches found. Try different answers.")
-
