@@ -17,16 +17,10 @@ movies = [
      "poster": "https://m.media-amazon.com/images/I/71n58UdFKbL._AC_SY679_.jpg"},
     {"title": "The Dark Knight", "genre": "Action", "actor": "Christian Bale", "mood": "Intense",
      "poster": "https://m.media-amazon.com/images/I/51k0qaOiYYL._AC_.jpg"},
-    {"title": "Crazy Rich Asians", "genre": "Romance", "actor": "Constance Wu", "mood": "Happy",
-     "poster": "https://m.media-amazon.com/images/I/91bl0jQpPfL._AC_SY679_.jpg"},
-    {"title": "Joker", "genre": "Drama", "actor": "Joaquin Phoenix", "mood": "Dark",
-     "poster": "https://m.media-amazon.com/images/I/81bJ0z0W1-L._AC_SY679_.jpg"},
     {"title": "Moana", "genre": "Animation", "actor": "Auli'i Cravalho", "mood": "Relaxed",
      "poster": "https://m.media-amazon.com/images/I/81K74r7rYRL._AC_SY679_.jpg"},
     {"title": "Finding Nemo", "genre": "Animation", "actor": "Ellen DeGeneres", "mood": "Relaxed",
      "poster": "https://m.media-amazon.com/images/I/81pE9L2W3WL._AC_SY679_.jpg"},
-    {"title": "Titanic", "genre": "Romance", "actor": "Kate Winslet", "mood": "Sad",
-     "poster": "https://m.media-amazon.com/images/I/81VrD4YVrFL._AC_SY679_.jpg"}
 ]
 
 # --- Options for dropdowns ---
@@ -41,8 +35,8 @@ genre_choice = st.selectbox("Genre", ["Any"] + genres)
 st.subheader("Step 2: Select a favorite actor")
 actor_choice = st.selectbox("Actor", ["Any"] + actors)
 
-st.subheader("Step 3: Choose your mood")
-mood_choice = st.radio("Mood", ["Any"] + moods)
+st.subheader("Step 3: Choose your mood (horizontal buttons)")
+mood_choice = st.radio("Mood", ["Any"] + moods, horizontal=True)
 
 # --- Recommendation Logic ---
 def recommend_movies(genre, actor, mood):
@@ -57,17 +51,17 @@ def recommend_movies(genre, actor, mood):
             score += 1
         if score > 0:
             recommendations.append((score, movie))
-    # Sort by highest score
     recommendations.sort(reverse=True, key=lambda x: x[0])
-    return [movie for score, movie in recommendations][:5]  # Top 5 matches
+    return [movie for score, movie in recommendations][:5]
 
-# --- Display Recommendations ---
+# --- Display Recommendations with Posters in Columns ---
 if st.button("Get Recommendations"):
     recs = recommend_movies(genre_choice, actor_choice, mood_choice)
     if recs:
         st.success("✅ Based on your choices, we recommend:")
-        for movie in recs:
-            st.write(f"**{movie['title']}**")
-            st.image(movie['poster'], width=200)
+        cols = st.columns(len(recs))  # one column per movie
+        for col, movie in zip(cols, recs):
+            col.write(f"**{movie['title']}**")
+            col.image(movie['poster'], use_column_width=True)
     else:
         st.warning("😕 Sorry, no matches found. Try different choices!")
